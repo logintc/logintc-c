@@ -17,7 +17,7 @@ Dependencies:
     
 Get and build the code:
 
-    $ git clone git@github.com:logintc/logintc-c
+    $ git clone https://github.com/logintc/logintc-c.git
     $ pushd logintc-c
     $ autoreconf -i
     $ ./configure
