@@ -8,5 +8,5 @@ find_package(CURL REQUIRED)
 add_library(logintc SHARED src/error.c src/logintc.c src/response.c src/session.c)
 target_link_libraries(logintc curl)
 
-install(DIRECTORY include DESTINATION include)
+install(DIRECTORY include/logintc DESTINATION include)
 install(TARGETS logintc DESTINATION lib)
