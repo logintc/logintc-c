@@ -13,29 +13,27 @@ Installation
 
 Dependencies:
 
-    sudo yum install git gcc make openssl-devel curl-devel autoconf automake libtool
+    sudo yum install git gcc make curl-devel cmake
     
 Get and build the code:
 
     $ git clone https://github.com/logintc/logintc-c.git
     $ pushd logintc-c
-    $ mkdir m4
-    $ autoreconf -i
-    $ ./configure
+    $ cmake .
     $ make
     $ popd
 
 When installed, program headers to be copied to /usr/local/include and shared and static library objects to /usr/local/lib. You can change the installation location by adding the --prefix flag:
 
-    $ ./configure --prefix=/opt/logintc-c
+    $ cmake -DCMAKE_INSTALL_PREFIX:PATH=/opt/logintc-c .
 
 Note that on 64-bit systems you must also set --libdir. This value will be the same as your "prefix" plus "/lib64":
 
-    $ ./configure --prefix=/usr/local --libdir=/usr/local/lib64
+    $ cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local -DCMAKE_INSTALL_LIBDIR:PATH=/usr/local/lib64 .
 
 You can pass compiler and linker flags by setting the CFLAGS and LDFLAGS variables. This is useful if you want to build a binary with debugging flags, more strict options, or optimization options:
 
-    $ CFLAGS="-g -ansi -pedantic -Wall" ./configure
+    $ CFLAGS="-g -ansi -pedantic -Wall" cmake .
 
 Install the binaries
 
