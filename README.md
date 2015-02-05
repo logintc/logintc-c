@@ -35,7 +35,7 @@ Install the binaries
 
     $ pushd logintc-c
     $ sudo make install
-    $ popd logintc-c
+    $ popd
 
 The following files are copied:
 
