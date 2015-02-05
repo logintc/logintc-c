@@ -13,7 +13,7 @@ Installation
 
 Dependencies:
 
-    sudo yum install git gcc make curl-devel cmake
+    sudo yum install git gcc gcc-c++ make curl-devel cmake
     
 Get and build the code:
 
@@ -27,10 +27,6 @@ When installed, program headers to be copied to /usr/local/include and shared an
 
     $ cmake -DCMAKE_INSTALL_PREFIX:PATH=/opt/logintc-c .
 
-Note that on 64-bit systems you must also set --libdir. This value will be the same as your "prefix" plus "/lib64":
-
-    $ cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local -DCMAKE_INSTALL_LIBDIR:PATH=/usr/local/lib64 .
-
 You can pass compiler and linker flags by setting the CFLAGS and LDFLAGS variables. This is useful if you want to build a binary with debugging flags, more strict options, or optimization options:
 
     $ CFLAGS="-g -ansi -pedantic -Wall" cmake .
@@ -41,22 +37,12 @@ Install the binaries
     $ sudo make install
     $ popd logintc-c
 
-Uninstall the binaries
-
-    $ pushd logintc-c
-    $ sudo make uninstall
-    $ popd logintc-c
-
 The following files are copied:
 
-    include/*.h (header files)
-    lib/liblogintc.a (static library)
-    lib/liblogintc.la (libtool metadata)
-    lib/liblogintc.so (symlink)
-    lib/liblogintc.so.0 (symlink)
-    lib/liblogintc.so.0.0.0 (shared library)
+    include/logintc/*.h (header files)
+    lib/liblogintc.so (shared library)
 
-You can also bypass the autotools process and compile the object manually:
+You can also bypass the CMake process and compile the object manually:
 
     $ pushd logintc-c
     $ gcc -Isrc -lcurl -fPIC -shared -o liblogintc.so src/logintc/*.c
