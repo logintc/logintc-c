@@ -69,6 +69,7 @@ int main(int argc, char** argv) {
     char const* const api_key = "YOUR_API_KEY";
     char const* const domain_id = "YOUR_DOMAIN_ID";
     char const* const user_name = "YOUR_USERNAME";
+    logintc_error_t* error;
     logintc_t* logintc;
     logintc_session_t* session = NULL;
     double timeout = _DEFAULT_TIMEOUT;
@@ -76,44 +77,47 @@ int main(int argc, char** argv) {
     time_t start;
     time_t now;
 
-    logintc_error_t* error;
+    /* Initialize data structures. */
     error = logintc_error_new();
-
     logintc = logintc_logintc_new(api_key);
-
+    
+    /* Create a new session. */
     session = logintc_create_session_with_username(logintc, domain_id, user_name, error);
-
     if (session == NULL) {
         fprintf(stderr,
                 "Error creating session. Type: %d, Code: %d, Message %s\n",
                 error->error_type, error->error_code, error->error_message);
-    } else {
-
-        start = time(NULL);
-        while (1) {
-            now = time(NULL);
-            if (difftime(now, start) > timeout) {
-                break;
-            }
-
-            logintc_get_session(logintc, domain_id, &session);
-
-            if (session->state == LOGINTC_SESSION_PENDING) {
-                break;
-            }
-
-            sleep(poll_interval);
-        }
-
-        if (session->state == LOGINTC_SESSION_APPROVED) {
-            printf("Request state: approved\n");
-        } else {
-            printf("Request state: denied or timed out\n");
-        }
+        goto cleanup;
     }
 
-    logintc_error_free(error);
+    /* Wait for the session to be handled by LoginTC. */
+    start = time(NULL);
+    while (1) {
+        /* Check for a timeout. */
+        now = time(NULL);
+        if (difftime(now, start) > timeout) {
+            break;
+        }
+
+        /* Update the session state. */
+        logintc_get_session(logintc, domain_id, &session);
+        if (session->state != LOGINTC_SESSION_PENDING) {
+            break;
+        }
+
+        sleep(poll_interval);
+    }
+
+    if (session->state == LOGINTC_SESSION_APPROVED) {
+        printf("Request state: approved\n");
+    } else {
+        printf("Request state: denied or timed out\n");
+    }
+
     logintc_session_free(session);
+
+cleanup:
+    logintc_error_free(error);
     logintc_logintc_free(logintc);
 
     return 0;
