@@ -19,7 +19,7 @@ Get and build the code:
 
     $ git clone https://github.com/logintc/logintc-c.git
     $ pushd logintc-c
-    $ cmake .
+    $ CFLAGS=-O3 cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr .
     $ make
     $ popd
 
@@ -35,7 +35,7 @@ Install the binaries
 
     $ pushd logintc-c
     $ sudo make install
-    $ popd logintc-c
+    $ popd
 
 The following files are copied:
 
